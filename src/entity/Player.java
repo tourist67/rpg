@@ -110,6 +110,7 @@ public class Player extends Entity {
 				break;
 		}
 
+		// *3 for scaling up the player size
 		g2.drawImage(image, x, y, gp.tileSize*3, gp.tileSize*3, null);
 	}
 }
