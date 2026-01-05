@@ -1,5 +1,7 @@
 package main;
 
+import entity.NPC_OldMan;
+
 public class AssetSetter {
   Gamepanel gp;
 
@@ -15,6 +17,10 @@ public class AssetSetter {
     gp.obj[1] = new object.OBJ_seed();
     gp.obj[1].worldX = gp.tileSize * 17;
     gp.obj[1].worldY = gp.tileSize * 19;
+  }
+
+  public void setNPC() {
+    gp.npc[0] = new NPC_OldMan(gp);
   }
 }
  

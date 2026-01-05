@@ -39,10 +39,13 @@ public class Player extends Entity {
 
 
 	public Player(Gamepanel gp, KeyHandler keyH) {
+		super(gp);
 		this.gp = gp;
 		this.keyH = keyH;
 
-		solidArea = new Rectangle(8,16,32,32); 
+		solidArea = new Rectangle(8,16,32,32);
+		solidAreaDefaultX = solidArea.x;
+		solidAreaDefaultY = solidArea.y;
 
 		screenX = gp.screenWidth / 2 - (gp.tileSize * 3) / 2;
 		screenY = gp.screenHeight / 2 - (gp.tileSize * 3) / 2;
