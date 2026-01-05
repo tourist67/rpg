@@ -22,7 +22,8 @@ public class Player extends Entity {
 	
 	public boolean isActioning = false;
 	int actionCounter = 0;
-	int actionSpriteNum = 1; 
+	int actionSpriteNum = 1;
+	public boolean hasHoe = false;
 	BufferedImage actionUp1, actionUp2, actionDown1, actionDown2;
 	BufferedImage actionLeft1, actionLeft2, actionRight1, actionRight2;
 
@@ -78,8 +79,12 @@ public class Player extends Entity {
 	}
 
 	public void update() {
-		// Handle action animation
-		if (keyH.ePressed && !isActioning) {
+		// Check for object pickup
+		int objIndex = gp.cChecker.checkObject(this);
+		pickUpObject(objIndex);
+		
+		// Handle action animation (only if player has hoe)
+		if (keyH.ePressed && !isActioning && hasHoe) {
 			isActioning = true;
 			actionCounter = 0;
 			actionSpriteNum = 1; 
@@ -87,6 +92,8 @@ public class Player extends Entity {
 			
 			// Convert grass to dirt in front of player
 			convertGrassToDirt();
+		} else if (keyH.ePressed && !hasHoe) {
+			keyH.ePressed = false; // Consume the key press even without hoe
 		}
 		
 		if (isActioning) {
@@ -218,6 +225,17 @@ public class Player extends Entity {
 			int tileNum = gp.tileM.mapTileNum[tileCol][tileRow];
 			if (gp.tileM.tile[tileNum].type != null && gp.tileM.tile[tileNum].type.equals("grass")) {
 				gp.tileM.mapTileNum[tileCol][tileRow] = 1; 
+			}
+		}
+	}
+	
+	public void pickUpObject(int index) {
+		if (index != 999) {
+			String objectName = gp.obj[index].name;
+			
+			if (objectName.equals("Hoe")) {
+				hasHoe = true;
+				gp.obj[index] = null; // Remove the hoe from the world
 			}
 		}
 	}

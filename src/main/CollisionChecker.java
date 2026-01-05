@@ -60,4 +60,30 @@ public class CollisionChecker {
       }
   }
 
+  public int checkObject(Entity entity) {
+    int index = 999; // 999 means no object found
+    
+    for (int i = 0; i < gp.obj.length; i++) {
+      if (gp.obj[i] != null) {
+        // Get entity's solid area position
+        int entitySolidAreaX = entity.worldX + entity.solidArea.x;
+        int entitySolidAreaY = entity.worldY + entity.solidArea.y;
+        
+        // Get object's solid area (using full tile size)
+        int objSolidAreaX = gp.obj[i].worldX;
+        int objSolidAreaY = gp.obj[i].worldY;
+        
+        // Check if player overlaps with object
+        if (entitySolidAreaX < objSolidAreaX + gp.tileSize &&
+            entitySolidAreaX + entity.solidArea.width > objSolidAreaX &&
+            entitySolidAreaY < objSolidAreaY + gp.tileSize &&
+            entitySolidAreaY + entity.solidArea.height > objSolidAreaY) {
+          index = i;
+          break;
+        }
+      }
+    }
+    return index;
+  }
+
 }
