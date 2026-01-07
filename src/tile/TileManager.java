@@ -5,12 +5,14 @@ import java.awt.Graphics2D;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Random;
 
 public class TileManager {
   
   Gamepanel gp;
   public Tile[] tile;
   public int mapTileNum[][];
+  Random random = new Random();
 
   public TileManager(Gamepanel gp) {
     this.gp = gp;
@@ -18,6 +20,7 @@ public class TileManager {
     mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
     getTileImage();
     loadMap();
+    randomizeGrass();
   }
 
   public void loadMap() {
@@ -129,8 +132,48 @@ public class TileManager {
       tile[15].image = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/res/tiles/grass/grass_right_bottom_corner.png"));
       tile[15].type = "grass";
 
+      // 16: Grass variant 2
+      tile[16] = new Tile();
+      tile[16].image = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/res/tiles/grass/grass2.png"));
+      tile[16].type = "grass";
+
+      // 17: Grass variant 3
+      tile[17] = new Tile();
+      tile[17].image = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/res/tiles/grass/grass3.png"));
+      tile[17].type = "grass";
+
+      // 18: Grass variant 4
+      tile[18] = new Tile();
+      tile[18].image = javax.imageio.ImageIO.read(getClass().getResourceAsStream("/res/tiles/grass/grass4.png"));
+      tile[18].type = "grass";
+
     } catch (Exception e) {
       e.printStackTrace();
+    }
+  }
+  
+  // Randomize grass tiles (tile 0) to add variety with grass2, 3, 4
+  public void randomizeGrass() {
+    for (int col = 0; col < gp.maxWorldCol; col++) {
+      for (int row = 0; row < gp.maxWorldRow; row++) {
+        // Only randomize base grass tiles (tile 0)
+        if (mapTileNum[col][row] == 0) {
+          int chance = random.nextInt(100);
+          if (chance < 60) {
+            // 60% chance: keep grass1 (tile 0)
+            mapTileNum[col][row] = 0;
+          } else if (chance < 80) {
+            // 20% chance: grass2 (tile 16)
+            mapTileNum[col][row] = 16;
+          } else if (chance < 92) {
+            // 12% chance: grass3 (tile 17)
+            mapTileNum[col][row] = 17;
+          } else {
+            // 8% chance: grass4 (tile 18)
+            mapTileNum[col][row] = 18;
+          }
+        }
+      }
     }
   }
 
@@ -150,12 +193,19 @@ public class TileManager {
         int screenX = worldX - gp.player.worldX + gp.player.screenX;
         int screenY = worldY - gp.player.worldY + gp.player.screenY;
         
-        // For plant tiles (5, 6, 7), draw tilled dirt first as background
-        if (tileNum >= 5 && tileNum <= 7) {
-            g2.drawImage(tile[4].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+        // Only draw tiles that are visible on screen
+        if (screenX + gp.tileSize > 0 &&
+            screenX < gp.screenWidth &&
+            screenY + gp.tileSize > 0 &&
+            screenY < gp.screenHeight) {
+            
+            // For plant tiles (5, 6, 7), draw tilled dirt first as background
+            if (tileNum >= 5 && tileNum <= 7) {
+                g2.drawImage(tile[4].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
+            }
+            
+            g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
         }
-        
-        g2.drawImage(tile[tileNum].image, screenX, screenY, gp.tileSize, gp.tileSize, null);
 
         worldCol++;
 
