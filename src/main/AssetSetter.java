@@ -1,6 +1,7 @@
 package main;
 
 import entity.NPC1;
+import entity.NPC2;
 import object.OBJ_Decor;
 import java.util.Random;
 
@@ -153,6 +154,7 @@ public class AssetSetter {
 
   public void setNPC() {
     gp.npc[0] = new NPC1(gp);
+    gp.npc[1] = new NPC2(gp); // Tutorial NPC at entrance
   }
 }
  

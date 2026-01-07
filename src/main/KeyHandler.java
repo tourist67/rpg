@@ -106,13 +106,19 @@ public class KeyHandler implements KeyListener {
 			}
 		}
 
-		// Exit dialogue state when WASD is pressed
+		// Exit dialogue state when WASD is pressed (only if dialogue sequence is complete)
 		if (gp.gameState == gp.dialogueState) {
 			if (code == KeyEvent.VK_W || code == KeyEvent.VK_A || 
 				code == KeyEvent.VK_S || code == KeyEvent.VK_D) {
-				gp.gameState = gp.playState;
-				gp.ui.resetDialogue(); // Reset typing effect when exiting dialogue
-				gp.stopDialogueMusic(); // Stop dialogue music
+				// Only allow exit if dialogue sequence is complete
+				if (gp.ui.dialogueSequenceComplete && gp.ui.dialogueFinished) {
+					gp.gameState = gp.playState;
+					gp.ui.resetDialogue(); // Reset typing effect when exiting dialogue
+					gp.stopDialogueMusic(); // Stop dialogue music
+				} else if (gp.ui.dialogueFinished && gp.ui.currentNPC != null) {
+					// Advance to next dialogue in sequence
+					gp.ui.currentNPC.speak();
+				}
 			}
 		}
 

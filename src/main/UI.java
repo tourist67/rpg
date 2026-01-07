@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.BasicStroke;
 import java.io.IOException;
 import java.io.InputStream;
+import entity.Entity;
 
 public class UI {
     Gamepanel gp;
@@ -31,7 +32,11 @@ public class UI {
     private int charIndex = 0;
     private int typingCounter = 0;
     private int typingSpeed = 2; // Lower = faster typing
-    private boolean dialogueFinished = false;
+    public boolean dialogueFinished = false;
+    
+    // Track current speaking NPC for sequential dialogues
+    public Entity currentNPC = null;
+    public boolean dialogueSequenceComplete = true;
 
     public UI(Gamepanel gp) {
         this.gp = gp;
@@ -300,6 +305,8 @@ public class UI {
         charIndex = 0;
         typingCounter = 0;
         dialogueFinished = false;
+        currentNPC = null;
+        dialogueSequenceComplete = true;
     }
     
     public void drawMoneyUI(Graphics2D g2) {
